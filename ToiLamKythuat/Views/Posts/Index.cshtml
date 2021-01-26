@@ -1,0 +1,55 @@
+﻿@model IEnumerable<ToiLamKythuat.Models.Post>
+
+@{
+    ViewData["Title"] = "Danh sách bài viết";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<h1>Bài viết</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Viết bài</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Tiêu đề
+            </th>
+            <th>
+                Ngày tạo
+            </th>
+            <th>
+                Từ khóa
+            </th>
+            <th>
+                Mô tả
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.createDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.keywords)
+                </td>
+                <td>
+                    <td>
+                    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.id">Sửa</a>
+                    <a class="btn btn-success" asp-action="Details" asp-route-id="@item.id">Chi tiết</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

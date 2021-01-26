@@ -1,0 +1,42 @@
+﻿@model IEnumerable<ToiLamKythuat.Models.Category>
+
+@{
+    ViewData["Title"] = "Danh mục bài viết";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<h1>Danh mục bài viết</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create"><i class="fas fa-plus-circle"></i> Thêm mới</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Mã quản lý
+            </th>
+            <th>
+                Tên tiêu đề
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.code)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.name)
+                </td>
+                <td>
+                    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.code">Sửa</a>
+                    <a class="btn btn-success" asp-action="Details" asp-route-id="@item.code">Chi tiết</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.code">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -23,6 +23,11 @@ namespace ToiLamKythuat.Controllers
             return View();
         }
 
+        public IActionResult Detail(int PostId)
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();

@@ -1,0 +1,77 @@
+﻿@model ToiLamKythuat.Models.Post
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>Post</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="id" />
+            <div class="form-group">
+                <label asp-for="title" class="control-label"></label>
+                <input asp-for="title" class="form-control" />
+                <span asp-validation-for="title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="createDate" class="control-label"></label>
+                <input asp-for="createDate" class="form-control" />
+                <span asp-validation-for="createDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="summary" class="control-label"></label>
+                <input asp-for="summary" class="form-control" />
+                <span asp-validation-for="summary" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="metaTitle" class="control-label"></label>
+                <input asp-for="metaTitle" class="form-control" />
+                <span asp-validation-for="metaTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="description" class="control-label"></label>
+                <input asp-for="description" class="form-control" />
+                <span asp-validation-for="description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="thumnailImage" class="control-label"></label>
+                <input asp-for="thumnailImage" class="form-control" />
+                <span asp-validation-for="thumnailImage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="coverImage" class="control-label"></label>
+                <input asp-for="coverImage" class="form-control" />
+                <span asp-validation-for="coverImage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="content" class="control-label"></label>
+                <input asp-for="content" class="form-control" />
+                <span asp-validation-for="content" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="keywords" class="control-label"></label>
+                <input asp-for="keywords" class="form-control" />
+                <span asp-validation-for="keywords" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="detail" class="control-label"></label>
+                <input asp-for="detail" class="form-control" />
+                <span asp-validation-for="detail" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
