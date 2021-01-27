@@ -1,0 +1,39 @@
+﻿@model IEnumerable<ToiLamKythuat.Models.Tag>
+
+@{
+    ViewData["Title"] = "Danh mục thẻ";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+<p>
+    <a class="btn btn-primary" asp-action="Create">Thêm mới thẻ</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Mã quản lý
+            </th>
+            <th>
+                Tên hiển thị
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.tagName)
+                </td>
+                <td>
+                    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.id">Sửa</a>
+                    <a class="btn btn-success" asp-action="Details" asp-route-id="@item.id">Chi tiết</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.id">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

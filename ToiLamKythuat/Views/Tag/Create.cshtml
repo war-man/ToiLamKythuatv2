@@ -1,0 +1,26 @@
+﻿@model ToiLamKythuat.Models.Tag
+
+@{
+    ViewData["Title"] = "Thê mới thẻ";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<h1>Thêm mới thẻ</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="tagName" class="control-label"><b>Tên hiển thị</b></label>
+                <input asp-for="tagName" class="form-control" />
+                <span asp-validation-for="tagName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Lưu" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-dark">Thoát</a>
+            </div>
+        </form>
+    </div>
+</div>
+
