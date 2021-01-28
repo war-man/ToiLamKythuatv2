@@ -25,6 +25,11 @@ namespace ToiLamKythuat.Controllers
             return View(await _context.Tags.ToListAsync());
         }
 
+        public async Task<IActionResult> Modal()
+        {
+            return PartialView(await _context.Tags.ToListAsync());
+        }
+
         // GET: Tag/Details/5
         public async Task<IActionResult> Details(int? id)
         {

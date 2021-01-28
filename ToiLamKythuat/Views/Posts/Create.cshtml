@@ -4,11 +4,17 @@
     ViewData["Title"] = "Viết bài";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
-<h1>Viết bài</h1>
-<hr />
+<style>
+    .ck-editor__editable {
+        height: 1000px;
+    }
+</style>
 <div class="container">
-    <div class="row">
-        <form asp-action="Create">
+    <h3>Viết bài</h3>
+    <hr />
+    <div class="row w-100 m-0">
+        <form asp-action="Create" class="w-100 px-0">
+
             <div class="row">
                 <div class="col-md-6">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -33,7 +39,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="form-group">
                 <label asp-for="metaTitle" class="control-label"><b>Meta Title</b></label>
                 <input asp-for="metaTitle" class="form-control" />
@@ -55,7 +60,7 @@
                 <span asp-validation-for="coverImage" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="content" class="control-label"></label>
+                <label asp-for="content" class="control-label"><b>Content</b></label>
                 <input asp-for="content" class="form-control" />
                 <span asp-validation-for="content" class="text-danger"></span>
             </div>
@@ -66,9 +71,74 @@
             </div>
             <div class="form-group">
                 <label asp-for="detail" class="control-label"><b>Nội dung</b></label>
-                @*<textarea id="editor" asp-for="detail" class="form-control" />*@
+                <textarea rows="10" asp-for="detail" id="editor"></textarea>
             </div>
-            <textarea rows="10" asp-for="detail" id="editor"></textarea>
+            <div class="row w-100 m-0">
+                <h3 class="d-block">Danh mục</h3>
+                <button class="ml-2 btn btn-success" type="button" onclick="onGetCategoryModal()">Chọn</button>
+                <table class="table w-100 mt-1">
+                    <thead>
+                        <tr>
+                            <th>
+                                Mã quản lý
+                            </th>
+                            <th>
+                                Tên tiêu đề
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.categories != null)
+                        {
+                            @foreach (var item in Model.categories)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.code)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.name)
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="row w-100 m-0">
+                <h3>Thẻ</h3>
+                <button class="ml-2 btn btn-success" type="button" onclick="onGetTagModal()">Chọn</button>
+                <table class="table w-100 mt-1">
+                    <thead>
+                        <tr>
+                            <th>
+                                Mã quản lý
+                            </th>
+                            <th>
+                                Tên thẻ
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.tags != null)
+                        {
+                            @foreach (var item in Model.tags)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.id)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.tagName)
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
             <div class="form-group">
                 <input type="submit" value="Lưu" class="btn btn-primary" />
                 <a class="btn btn-dark" asp-action="Index">Thoát</a>
@@ -76,68 +146,59 @@
         </form>
     </div>
 </div>
-<script src="https://cdn.ckeditor.com/ckeditor5/25.0.0/classic/ckeditor.js"></script>
+<div id="modal-content-area" class="w-100"></div>
+<script src="~/lib/ckeditor/ckeditor.js"></script>
 <script>
-    var config = {};
-    config.toolbar = [
-        { name: 'document', groups: ['mode', 'document', 'doctools'], items: ['Source', '-', 'Save', 'NewPage', 'ExportPdf', 'Preview', 'Print', '-', 'Templates'] },
-        { name: 'clipboard', groups: ['clipboard', 'undo'], items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'] },
-        { name: 'editing', groups: ['find', 'selection', 'spellchecker'], items: ['Find', 'Replace', '-', 'SelectAll', '-', 'Scayt'] },
-        { name: 'forms', items: ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField'] },
-        '/',
-        { name: 'basicstyles', groups: ['basicstyles', 'cleanup'], items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'CopyFormatting', 'RemoveFormat'] },
-        { name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi'], items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl', 'Language'] },
-        { name: 'links', items: ['Link', 'Unlink', 'Anchor'] },
-        { name: 'insert', items: ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe'] },
-        '/',
-        { name: 'styles', items: ['Styles', 'Format', 'Font', 'FontSize'] },
-        { name: 'colors', items: ['TextColor', 'BGColor'] },
-        { name: 'tools', items: ['Maximize', 'ShowBlocks'] },
-        { name: 'others', items: ['-'] },
-        { name: 'about', items: ['About'] }
-    ];
-
-    config.toolbarGroups = [
-        { name: 'document', groups: ['mode', 'document', 'doctools'] },
-        { name: 'clipboard', groups: ['clipboard', 'undo'] },
-        { name: 'editing', groups: ['find', 'selection', 'spellchecker'] },
-        { name: 'forms' },
-        '/',
-        { name: 'basicstyles', groups: ['basicstyles', 'cleanup'] },
-        { name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi'] },
-        { name: 'links' },
-        { name: 'insert' },
-        '/',
-        { name: 'styles' },
-        { name: 'colors' },
-        { name: 'tools' },
-        { name: 'others' },
-        { name: 'about' }
-    ];
-
-    ClassicEditor
-        .create(document.querySelector('#editor'), {
-            toolbar: {
-                items: [
-                    'heading', '|',
-                    'alignment', '|',
-                    'bold', 'italic', 'strikethrough', 'underline', 'subscript', 'superscript', '|',
-                    'link', '|',
-                    'bulletedList', 'numberedList', 'todoList',
-                    '-', 
-                    'fontfamily', 'fontsize', 'fontColor', 'fontBackgroundColor', '|',
-                    'code', 'codeBlock', '|',
-                    'insertTable', '|',
-                    'outdent', 'indent', '|',
-                    'imageUpload', 'blockQuote', '|',
-                    'undo', 'redo'
-                ],
-                shouldNotGroupWhenFull: true
-            }
-        })
-        .catch(error => {
-            console.error(error);
-        });
+    CKEDITOR.editorConfig = function (config) {
+        config.toolbarGroups = [
+            { name: 'document', groups: ['mode', 'document', 'doctools'] },
+            { name: 'clipboard', groups: ['clipboard', 'undo'] },
+            { name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing'] },
+            { name: 'forms', groups: ['forms'] },
+            '/',
+            { name: 'basicstyles', groups: ['cleanup', 'basicstyles'] },
+            { name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph'] },
+            { name: 'links', groups: ['links'] },
+            { name: 'insert', groups: ['insert'] },
+            '/',
+            { name: 'styles', groups: ['styles'] },
+            { name: 'colors', groups: ['colors'] },
+            { name: 'tools', groups: ['tools'] },
+            { name: 'others', groups: ['others'] },
+            { name: 'about', groups: ['about'] }
+        ];
+    };
+    CKEDITOR.replace('editor');
 </script>
+<script>
+    function onGetCategoryModal() {
+        $.ajax({
+            url: "@Url.Action("Modal", "Category")",
+            success: (res) => {
+                $("#modal-content-area").empty();
+                $("#modal-content-area").html(res);
+            }
+        }).done(() => {
+            Init(() => {
+                $("#modal-content-area").empty();
+            });
+        });
+    }
+
+    function onGetTagModal() {
+        $.ajax({
+            url: "@Url.Action("Modal", "Tag")",
+            success: (res) => {
+                $("#modal-content-area").empty();
+                $("#modal-content-area").html(res);
+            }
+        }).done(() => {
+            Init(() => {
+                $("#modal-content-area").empty();
+            });
+        });
+    }
+</script>
+
 
 

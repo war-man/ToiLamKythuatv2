@@ -1,0 +1,64 @@
+﻿@model IEnumerable<ToiLamKythuat.Models.Tag>
+<script>
+    var showFunctionCallback = null;
+    var hideFunctionCallback = null;
+
+    Init = (closeFunctionCallback) => {
+        $("#link-modal").modal("show");
+        $("#link-modal").on('hidden.bs.modal', closeFunctionCallback);
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        $('#link-table tbody').on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+    });
+</script>
+<style>
+    .selected {
+        background-color: khaki;
+    }
+</style>
+<div class="modal modal fade" id="link-modal">
+    <div class="modal-dialog w-100">
+        <div class="modal-content w-100">
+            <div class="modal-header">
+                <h4 class="modal-title">Gắn thẻ</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body w-100">
+                <table class="table" id="link-table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Mã quản lý
+                            </th>
+                            <th>
+                                Thẻ
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.id)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.tagName)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">Xác nhận</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+

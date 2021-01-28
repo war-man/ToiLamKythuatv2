@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToiLamKythuat", "ToiLamKythuat\ToiLamKythuat.csproj", "{FC4F9E9D-1FF0-47AF-8348-318852C780EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToiLamKythuat", "ToiLamKythuat\ToiLamKythuat.csproj", "{FC4F9E9D-1FF0-47AF-8348-318852C780EB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevExtreme NuGet.config", "DevExtreme NuGet.config", "{D4285E9F-9DD4-4D35-BBD9-2DB554C0E0C1}"
+	ProjectSection(SolutionItems) = preProject
+		NuGet.config = NuGet.config
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

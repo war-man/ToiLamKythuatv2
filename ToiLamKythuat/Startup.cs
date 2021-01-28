@@ -25,7 +25,7 @@ namespace ToiLamKythuat
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
             services.AddDbContext<BlogContext>(opt =>
                 opt.UseSqlServer(AppGlobal.ConnectionString));
         }
