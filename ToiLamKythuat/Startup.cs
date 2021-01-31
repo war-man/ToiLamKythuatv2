@@ -27,7 +27,8 @@ namespace ToiLamKythuat
         {
             services.AddControllersWithViews().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
             services.AddDbContext<BlogContext>(opt =>
-                opt.UseSqlServer(AppGlobal.ConnectionString));
+                opt.UseSqlServer(AppGlobal.ConnectionString)
+                   .LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

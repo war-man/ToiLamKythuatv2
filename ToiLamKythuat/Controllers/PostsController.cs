@@ -53,16 +53,46 @@ namespace ToiLamKythuat.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,title,createDate,summary,metaTitle,description,thumnailImage,coverImage,content,keywords,detail")] Post post)
+        public async Task<IActionResult> Create([Bind("id,title,createDate,summary,metaTitle,description,thumnailImage,coverImage,content,keywords,detail")] Post post, 
+            List<Category> categories,
+            List<Tag> tags)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(post);
+                foreach(var category in categories)
+                {
+                    var link = _context.Categories.Find(category.code);
+                    if(post.categories == null)
+                    {
+                        post.categories = new List<Category>();
+                    }
+                    post.categories.Add(link);
+                }
+
+                foreach (var tag in tags)
+                {
+                    var link = _context.Tags.Find(tag.id);
+                    if (post.tags == null)
+                    {
+                        post.tags = new List<Tag>();
+                    }
+                    post.tags.Add(link);
+                }
+
+                _context.Posts.Add(post);
+                
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if(post.id > 0)
+                {
+                    await _context.SaveChangesAsync();
+                    return Json(new { state = "success", message = "Thêm mới thành công", model = post });
+                }
+                else
+                {
+                    return Json(new { state = "error", message = "Thêm mới thất bại"});
+                }
             }
-            return View(post);
+            return Json(new { state = "error", message = string.Join(";", ModelState.Values.Select(x => x.Errors))});
         }
 
         // GET: Posts/Edit/5

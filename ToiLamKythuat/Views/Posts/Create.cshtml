@@ -13,8 +13,7 @@
     <h3>Viết bài</h3>
     <hr />
     <div class="row w-100 m-0">
-        <form asp-action="Create" class="w-100 px-0">
-
+        <form class="w-100">
             <div class="row">
                 <div class="col-md-6">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -51,12 +50,22 @@
             </div>
             <div class="form-group">
                 <label asp-for="thumnailImage" class="control-label"><b>Thumnail</b></label>
-                <input asp-for="thumnailImage" class="form-control" />
+                <div class="input-group">
+                    <input asp-for="thumnailImage" class="form-control" />
+                    <div class="input-group-append">
+                        <span class="btn btn-success" type="button" onclick="onBrowser('thumnailImage')">Ảnh</span>
+                    </div>
+                </div>
                 <span asp-validation-for="thumnailImage" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="coverImage" class="control-label"><b>Ảnh bìa</b></label>
-                <input asp-for="coverImage" class="form-control" />
+                <div class="input-group">
+                    <input asp-for="coverImage" class="form-control" />
+                    <div class="input-group-append">
+                        <span class="btn btn-success" type="button" onclick="onBrowser('coverImage')">Ảnh</span>
+                    </div>
+                </div>
                 <span asp-validation-for="coverImage" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -76,7 +85,7 @@
             <div class="row w-100 m-0">
                 <h3 class="d-block">Danh mục</h3>
                 <button class="ml-2 btn btn-success" type="button" onclick="onGetCategoryModal()">Chọn</button>
-                <table class="table w-100 mt-1">
+                <table class="table w-100 mt-1" id="post-categories">
                     <thead>
                         <tr>
                             <th>
@@ -109,7 +118,7 @@
             <div class="row w-100 m-0">
                 <h3>Thẻ</h3>
                 <button class="ml-2 btn btn-success" type="button" onclick="onGetTagModal()">Chọn</button>
-                <table class="table w-100 mt-1">
+                <table class="table w-100 mt-1" id="post-tags">
                     <thead>
                         <tr>
                             <th>
@@ -133,6 +142,8 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.tagName)
                                     </td>
+                                    <td>
+                                    </td>
                                 </tr>
                             }
                         }
@@ -140,7 +151,7 @@
                 </table>
             </div>
             <div class="form-group">
-                <input type="submit" value="Lưu" class="btn btn-primary" />
+                <button type="button" value="Lưu" class="btn btn-primary" onclick="onSave()">Lưu</button>
                 <a class="btn btn-dark" asp-action="Index">Thoát</a>
             </div>
         </form>
@@ -149,26 +160,93 @@
 <div id="modal-content-area" class="w-100"></div>
 <script src="~/lib/ckeditor/ckeditor.js"></script>
 <script>
-    CKEDITOR.editorConfig = function (config) {
-        config.toolbarGroups = [
-            { name: 'document', groups: ['mode', 'document', 'doctools'] },
-            { name: 'clipboard', groups: ['clipboard', 'undo'] },
-            { name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing'] },
-            { name: 'forms', groups: ['forms'] },
-            '/',
-            { name: 'basicstyles', groups: ['cleanup', 'basicstyles'] },
-            { name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph'] },
-            { name: 'links', groups: ['links'] },
-            { name: 'insert', groups: ['insert'] },
-            '/',
-            { name: 'styles', groups: ['styles'] },
-            { name: 'colors', groups: ['colors'] },
-            { name: 'tools', groups: ['tools'] },
-            { name: 'others', groups: ['others'] },
-            { name: 'about', groups: ['about'] }
-        ];
-    };
-    CKEDITOR.replace('editor');
+    CKEDITOR.replace('editor', {
+       toolbar: 'admin_mode',
+        filebrowserImageBrowseUrl: "@Url.Action("Index","FileManager")",
+    });
+
+    CKEDITOR.on('dialogDefinition', function (event) {
+        var editor = event.editor,
+            dialogDefinition = event.data.definition,
+            tabCount = dialogDefinition.contents.length,
+            uploadButton, submitButton, inputId,
+            elfUrl = editor.config.filebrowserUploadUrl,
+            // elFinder configs
+            elfDirHashMap = { // Dialog name / elFinder holder hash Map
+                image: '',
+                flash: '',
+                files: '',
+                link: '',
+                fb: 'l1_Lw' // fallback target
+            },
+            customData = {}; // any custom data to post
+
+        for (var i = 0; i < tabCount; i++) {
+            uploadButton = dialogDefinition.contents[i].get('upload');
+            submitButton = dialogDefinition.contents[i].get('uploadButton');
+
+            if (uploadButton !== null && submitButton !== null) {
+                uploadButton.hidden = false;
+                submitButton.hidden = false;
+                uploadButton.onChange = function () {
+                    inputId = this.domId;
+                }
+                submitButton.onClick = function (e) {
+                    dialogName = CKEDITOR.dialog.getCurrent()._.name;
+                    var target = elfDirHashMap[dialogName] ? elfDirHashMap[dialogName] : elfDirHashMap['fb'],
+                        name = $('#' + inputId),
+                        input = name.find('iframe').contents().find('form').find('input:file'),
+                        error = function (err) {
+                            alert(err.replace('<br>', '\n'));
+                        };
+
+                    if (input.val()) {
+                        var fd = new FormData();
+                        fd.append('cmd', 'upload');
+                        fd.append('overwrite', 0); // disable upload overwrite to make to increment file name
+                        fd.append('target', target);
+                        $.each(customData, function (key, val) {
+                            fd.append(key, val);
+                        });
+                        fd.append('upload[]', input[0].files[0]);
+                        $.ajax({
+                            url: elfUrl,
+                            type: 'POST',
+                            data: fd,
+                            processData: false,
+                            contentType: false,
+                            dataType: 'json'
+                        }).done(function (data) {
+                                if (data.added && data.added[0]) {
+                                    var url = data.added[0].url;
+                                    var dialog = CKEDITOR.dialog.getCurrent();
+                                    if (dialogName == 'image') {
+                                        var urlObj = 'txtUrl'
+                                    } else if (dialogName == 'flash') {
+                                        var urlObj = 'src'
+                                    } else if (dialogName == 'files' || dialogName == 'link') {
+                                        var urlObj = 'url'
+                                    } else {
+                                        return;
+                                    }
+                                    dialog.selectPage('info');
+                                    dialog.setValueOf(dialog._.currentTabId, urlObj, url);
+                                } else {
+                                    error(data.error || data.warning || 'errUploadFile');
+                                }
+                            })
+                            .fail(function () {
+                                error('errUploadFile');
+                            })
+                            .always(function () {
+                                input.val('');
+                            });
+                    }
+                    return false;
+                }
+            }
+        }
+    });
 </script>
 <script>
     function onGetCategoryModal() {
@@ -180,6 +258,22 @@
             }
         }).done(() => {
             Init(() => {
+                if (selectedObjects != null) {
+                    $.each(selectedObjects, (index, obj) => {
+                        let html = '<tr>';
+                        html += '<td>';
+                        html += obj.code;
+                        html += '</td>';
+                        html += '<td>';
+                        html += obj.name;
+                        html += '</td>';
+                        html += '<td>';
+                        html += '<button class="btn btn-danger removeButton" type="button">Xóa</button>';
+                        html += '</td>';
+                        html += '</tr>';
+                        $('#post-categories tbody').append(html);
+                    });
+                }
                 $("#modal-content-area").empty();
             });
         });
@@ -194,11 +288,100 @@
             }
         }).done(() => {
             Init(() => {
+                if (selectedObjects != null) {
+                    $.each(selectedObjects, (index, obj) => {
+                        let html = '<tr>';
+                        html += '<td>';
+                        html += obj.code;
+                        html += '</td>';
+                        html += '<td>';
+                        html += obj.name;
+                        html += '</td>';
+                        html += '<td>';
+                        html += '<button class="btn btn-danger removeButton" type="button">Xóa</button>';
+                        html += '</td>';
+                        html += '</tr>';
+                        $('#post-tags tbody').append(html);
+                    });
+                }
                 $("#modal-content-area").empty();
             });
         });
     }
+
+    $(document).on('click', '.removeButton', (e) => {
+        $(e.target).closest('tr').remove();
+        return false;
+    });
+
+    function onBrowser(elementId) {
+        $.ajax({
+            url: "@Url.Action("Modal", "FileManager")",
+            success: (res) => {
+                $("#modal-content-area").empty();
+                $("#modal-content-area").html(res);
+            }
+        }).done(() => {
+            Init(() => {
+                $("#" + elementId).val(selectedFilePath);
+                $("#modal-content-area").empty();
+            });
+        });
+    }
+
 </script>
+<script>
+    function onSave() {
+        let categories = [];
+
+        $('#post-categories > tbody > tr').each((index, tr) => {
+            let code = $(tr).find("td:eq(0)").text();
+            let name = $(tr).find("td:eq(1)").text();
+            let obj = {
+                code,
+                name,
+            }
+            categories.push(obj);
+        });
+
+        let tags = [];
+
+        $('#post-tags > tbody > tr').each((index, tr) => {
+            let id = $(tr).find("td:eq(0)").text();
+            let tagName = $(tr).find("td:eq(1)").text();
+            let obj = {
+                id,
+                tagName,
+            }
+            tags.push(obj);
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Create","Posts")",
+            data: {
+                post: {
+                    title: $("#title").val(),
+                    createDate: $("#createDate").val(),
+                    summary: $("#summary").val(),
+                    metaTitle: $("#metaTitle").val(),
+                    description: $("#description").val(),
+                    thumnailImage: $("#thumnailImage").val(),
+                    coverImage: $("#coverImage").val(),
+                    content: $("#content").val(),
+                    keywords: $("#keywords").val(),
+                    detail: CKEDITOR.instances['editor'].getData(),
+                },
+                categories: categories,
+                tags: tags
+            },
+            success: (res) => {
+
+            }
+        })
+    }
+</script>
+
 
 
 

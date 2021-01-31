@@ -1,0 +1,91 @@
+﻿<link rel="stylesheet" href="~/css/elfinder/theme.css" />
+<script src="~/lib/jqueryui/jquery-ui.min.js"></script>
+<script src="~/lib/elfinder/js/elfinder.min.js"></script>
+<script type="text/javascript">
+    var selectedFilePath = null;
+
+    $(document).ready(function () {
+        var myCommands = elFinder.prototype._options.commands;
+
+        // Not yet implemented commands in elFinder.NetCore
+        var disabled = ['callback', 'chmod', 'editor', 'netmount', 'ping', 'search', 'zipdl', 'help'];
+        elFinder.prototype.i18.en.messages.TextArea = "Edit";
+
+        $.each(disabled, function (i, cmd) {
+            (idx = $.inArray(cmd, myCommands)) !== -1 && myCommands.splice(idx, 1);
+        });
+        var options = {
+            baseUrl: "/lib/elfinder/",
+            url: "/file-system/connector",
+            rememberLastDir: false,
+            commands: myCommands,
+            uiOptions: {
+                toolbar: [
+                    ['back', 'forward'],
+                    ['reload'],
+                    ['home', 'up'],
+                    ['mkdir', 'mkfile', 'upload'],
+                    ['open', 'download'],
+                    ['undo', 'redo'],
+                    ['info'],
+                    ['quicklook'],
+                    ['copy', 'cut', 'paste'],
+                    ['rm'],
+                    ['duplicate', 'rename', 'edit'],
+                    ['selectall', 'selectnone', 'selectinvert'],
+                    ['view', 'sort']
+                ]
+            },
+            lang: 'vi',
+            handlers: {
+                select: (event, elfinderInstance) => {
+                    if (event.data.selected.length == 1) {
+                        var item = $('#' + event.data.selected[0]);
+                        if (!item.hasClass('directory')) {
+                            selectedFile = event.data.selected[0];
+                            $('#elfinder-selectFile').show();
+                            return;
+                        }
+                    }
+                    $('#elfinder-selectFile').hide();
+                    selectedFile = null;
+                }
+            },
+            getFileCallback: function (file) {
+                console.log(file);
+                selectedFilePath = file.path;
+                $("#browser-modal").modal("hide");
+            }
+        };
+        $('#elfinder').elfinder(options).elfinder('instance');
+    });
+</script>
+<script>
+    var showFunctionCallback = null;
+    var hideFunctionCallback = null;
+
+    Init = (closeFunctionCallback) => {
+        $("#browser-modal").modal("show");
+        $("#browser-modal").on('hidden.bs.modal', closeFunctionCallback);
+    }
+</script>
+<div class="modal fade" id="browser-modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Chọn file</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div id="elfinder"></div>
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="onConfirm()">Xác nhận</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>

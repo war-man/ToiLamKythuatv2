@@ -14,6 +14,20 @@
             $(this).toggleClass('selected');
         });
     });
+
+    onConfirm = () => {
+        selectedObjects = [];
+        $('table > tbody > tr.selected').each((index, tr) => {
+            let code = $(tr).find("td:eq(0)").text();
+            let name = $(tr).find("td:eq(1)").text();
+            let obj = {
+                code,
+                name,
+            }
+            selectedObjects.push(obj);
+        })
+        $("#link-modal").modal("hide");
+    }
 </script>
 <style>
     .selected {
@@ -43,19 +57,15 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.id)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.tagName)
-                                </td>
+                                <td>@Html.DisplayFor(modelItem => item.id)</td>
+                                <td>@Html.DisplayFor(modelItem => item.tagName)</td>
                             </tr>
                         }
                     </tbody>
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal">Xác nhận</button>
+                <button type="button" class="btn btn-success" onclick="onConfirm()">Xác nhận</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
             </div>
         </div>

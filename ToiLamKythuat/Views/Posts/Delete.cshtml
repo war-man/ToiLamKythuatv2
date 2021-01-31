@@ -1,82 +1,33 @@
 ﻿@model ToiLamKythuat.Models.Post
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Xóa bài viết";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
-
-<h1>Delete</h1>
-
-<h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>Post</h4>
+    <h4>Xác nhận xóa bài viết</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.title)
+            Tiêu đề
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.title)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.createDate)
+            Ngày tạo
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.createDate)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.summary)
+            Tóm tắt
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.summary)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.metaTitle)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.metaTitle)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.thumnailImage)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.thumnailImage)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.coverImage)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.coverImage)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.content)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.content)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.keywords)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.keywords)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.detail)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.detail)
-        </dd>
     </dl>
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="submit" value="Xóa" class="btn btn-danger" />
+        <a class="btn btn-dark" asp-action="Index">Thoát</a>
     </form>
 </div>
