@@ -103,7 +103,8 @@ namespace ToiLamKythuat.Controllers
                 return NotFound();
             }
 
-            var post = await _context.Posts.FindAsync(id);
+            var post = await _context.Posts.Where(x => x.id == id)
+                .Include("tags").Include("categories").AsNoTracking().FirstOrDefaultAsync();
             if (post == null)
             {
                 return NotFound();
@@ -115,8 +116,10 @@ namespace ToiLamKythuat.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("id,title,createDate,summary,metaTitle,description,thumnailImage,coverImage,content,keywords,detail")] Post post)
+        public async Task<IActionResult> Edit(long id, 
+            [Bind("id,title,createDate,summary,metaTitle,description,thumnailImage,coverImage,content,keywords,detail")] Post post, 
+            List<Category> categories,
+            List<Tag> tags)
         {
             if (id != post.id)
             {
@@ -127,6 +130,20 @@ namespace ToiLamKythuat.Controllers
             {
                 try
                 {
+                    post.categories = new List<Category>();
+                    post.tags = new List<Tag>();
+
+                    foreach (var category in categories)
+                    {
+                        var link = _context.Categories.FirstOrDefault(x => x.code == category.code);
+                        post.categories.Add(link);
+                    }
+
+                    foreach (var tag in tags)
+                    {
+                        var link = _context.Tags.FirstOrDefault(x => x.id == tag.id);
+                        post.tags.Add(link);
+                    }
                     _context.Update(post);
                     await _context.SaveChangesAsync();
                 }

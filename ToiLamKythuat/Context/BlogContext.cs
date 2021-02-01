@@ -35,7 +35,6 @@ namespace ToiLamKythuat.Context
             builder.Entity<User>(e =>
             {
                 e.HasKey(x => x.username);
-                e.Property<byte[]>(RowVersion).IsRowVersion();
                 e.Property(x => x.username).HasMaxLength(1000);
                 e.Property(x => x.password).HasMaxLength(1000);
                 e.Property(x => x.hashKey).HasMaxLength(1000);
@@ -45,7 +44,6 @@ namespace ToiLamKythuat.Context
             {
                 e.HasKey(x => x.id);
                 e.Property(x => x.id).UseIdentityColumn();
-                e.Property<byte[]>(RowVersion).IsRowVersion();
                 e.Property(x => x.title).HasMaxLength(1000);
                 e.Property(x => x.summary).HasMaxLength(1000);
                 e.Property(x => x.description).HasMaxLength(1000);
