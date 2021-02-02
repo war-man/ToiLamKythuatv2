@@ -130,21 +130,64 @@ namespace ToiLamKythuat.Controllers
             {
                 try
                 {
-                    post.categories = new List<Category>();
-                    post.tags = new List<Tag>();
+                    _context.Entry(post).State = EntityState.Detached;
+                    var updatePost = _context.Posts
+                        .Include("categories")
+                        .Include("tags")
+                        .SingleOrDefault(x => x.id == id);
+
+
+                    foreach(var category in updatePost.categories)
+                    {
+                        var checkLink = categories.FirstOrDefault(x => x.code == category.code);
+                        if(checkLink == null)
+                        {
+                            var removeLink = _context.Categories.SingleOrDefault(x => x.code == category.code);
+                            updatePost.categories.Remove(removeLink);
+                        }
+                    }
+
+                    foreach (var tag in updatePost.tags)
+                    {
+                        var checkLink = tags.FirstOrDefault(x => x.id == tag.id);
+                        if (checkLink == null)
+                        {
+                            var removeLink = _context.Tags.SingleOrDefault(x => x.id == tag.id);
+                            updatePost.tags.Remove(removeLink);
+                        }
+                    }
+
+                    updatePost.detail = post.detail;
 
                     foreach (var category in categories)
                     {
-                        var link = _context.Categories.FirstOrDefault(x => x.code == category.code);
-                        post.categories.Add(link);
+                        var oldLink = updatePost.categories?.FirstOrDefault(x => x.code == category.code);
+                        if (oldLink != null)
+                        {
+                            updatePost.categories.Remove(oldLink);
+                        }
+                        var link = _context.Categories.SingleOrDefault(x => x.code == category.code);
+                        if (updatePost.categories == null)
+                        {
+                            updatePost.categories = new List<Category>();
+                        }
+                        updatePost.categories.Add(link);
                     }
 
                     foreach (var tag in tags)
                     {
-                        var link = _context.Tags.FirstOrDefault(x => x.id == tag.id);
-                        post.tags.Add(link);
+                        var oldLink = updatePost.tags?.FirstOrDefault(x => x.id == tag.id);
+                        if (oldLink != null)
+                        {
+                            updatePost.tags.Remove(oldLink);
+                        }
+                        var link = _context.Tags.SingleOrDefault(x => x.id == tag.id);
+                        if (updatePost.tags == null)
+                        {
+                            updatePost.tags = new List<Tag>();
+                        }
+                        updatePost.tags.Add(link);
                     }
-                    _context.Update(post);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
