@@ -1,13 +1,13 @@
 ﻿@using ToiLamKythuat.ViewModels
 @model SidebarInfor
-
 <div class="recent">
     <h3>BÀI VIẾT MỚI</h3>
     <ul>
-        <li><a href="#">Aliquam tincidunt mauris</a></li>
-        <li><a href="#">Vestibulum auctor dapibus  lipsum</a></li>
-        <li><a href="#">Nunc dignissim risus consecu</a></li>
-        <li><a href="#">Cras ornare tristiqu</a></li>
+        @foreach (var post in Model.topPosts)
+        {
+            var postUrl = post.metaTitle + "-" + post.id + ".html";
+            <li><a href="@postUrl">@post.title</a></li>
+        }
     </ul>
 </div>
 <div class="comments">
@@ -21,10 +21,11 @@
 <div class="archives">
     <h3>DANH MỤC BÀI VIẾT</h3>
     <ul>
-        <li><a href="#">October 2013</a></li>
-        <li><a href="#">September 2013</a></li>
-        <li><a href="#">August 2013</a></li>
-        <li><a href="#">July 2013</a></li>
+        @foreach (var category in Model.categories)
+        {
+            var categoryUrl = "danh-muc/" + category.meta + "-" + category.code + ".html";
+            <li><a href="@categoryUrl">@category.name</a></li>
+        }
     </ul>
 </div>
 <div class="archives">
@@ -34,10 +35,11 @@
 <div class="categories">
     <h3>TAG</h3>
     <ul>
-        <li><a href="#">Vivamus vestibulum nulla</a></li>
-        <li><a href="#">Integer vitae libero ac risus e</a></li>
-        <li><a href="#">Vestibulum commo</a></li>
-        <li><a href="#">Cras iaculis ultricies</a></li>
+        @foreach (var tag in Model.tags)
+        {
+            var tagUrl = "tag/" + tag.meta + "-" + tag.id + ".html";
+            <li><a href="@tagUrl">@tag.tagName</a></li>
+        }
     </ul>
 </div>
 <div class="clearfix"></div>

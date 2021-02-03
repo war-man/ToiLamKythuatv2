@@ -105,12 +105,8 @@
                             @foreach (var item in Model.categories)
                             {
                                 <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.code)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.name)
-                                    </td>
+                                    <td>@Html.DisplayFor(modelItem => item.code)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.name)</td>
                                     <td>
                                         <button class="btn btn-danger removeButton" type="button">Xóa</button>
                                     </td>
@@ -141,12 +137,8 @@
                             @foreach (var item in Model.tags)
                             {
                                 <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.id)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.tagName)
-                                    </td>
+                                    <td>@Html.DisplayFor(modelItem => item.id)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.tagName)</td>
                                     <td>
                                         <button class="btn btn-danger removeButton" type="button">Xóa</button>
                                     </td>

@@ -9,6 +9,7 @@ namespace ToiLamKythuat.Models
     {
         public int id { get; set; }
         public string tagName { get; set; }
+        public string meta { get; set; }
         public virtual ICollection<Post> posts { get; set; }
     }
 }

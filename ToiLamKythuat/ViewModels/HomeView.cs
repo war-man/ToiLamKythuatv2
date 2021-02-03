@@ -6,7 +6,7 @@ using ToiLamKythuat.Models;
 
 namespace ToiLamKythuat.ViewModels
 {
-    public class SidebarInfor
+    public class HomeView
     {
         public IEnumerable<Post> topPosts { get; set; }
         public IEnumerable<Category> categories { get; set; }

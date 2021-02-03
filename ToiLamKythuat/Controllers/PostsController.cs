@@ -136,11 +136,10 @@ namespace ToiLamKythuat.Controllers
                         .Include("tags")
                         .SingleOrDefault(x => x.id == id);
 
-
-                    foreach(var category in updatePost.categories)
+                    foreach (var category in updatePost.categories)
                     {
                         var checkLink = categories.FirstOrDefault(x => x.code == category.code);
-                        if(checkLink == null)
+                        if (checkLink == null)
                         {
                             var removeLink = _context.Categories.SingleOrDefault(x => x.code == category.code);
                             updatePost.categories.Remove(removeLink);
@@ -158,35 +157,40 @@ namespace ToiLamKythuat.Controllers
                     }
 
                     updatePost.detail = post.detail;
+                    updatePost.title = post.title;
+                    updatePost.summary = post.summary;
+                    updatePost.coverImage = post.coverImage;
+                    updatePost.thumnailImage = post.thumnailImage;
+                    updatePost.keywords = post.keywords;
+                    updatePost.content = post.content;
+                    updatePost.description = post.description;
 
                     foreach (var category in categories)
                     {
                         var oldLink = updatePost.categories?.FirstOrDefault(x => x.code == category.code);
-                        if (oldLink != null)
+                        if (oldLink == null)
                         {
-                            updatePost.categories.Remove(oldLink);
+                            var link = _context.Categories.SingleOrDefault(x => x.code == category.code);
+                            if (updatePost.categories == null)
+                            {
+                                updatePost.categories = new List<Category>();
+                            }
+                            updatePost.categories.Add(link);
                         }
-                        var link = _context.Categories.SingleOrDefault(x => x.code == category.code);
-                        if (updatePost.categories == null)
-                        {
-                            updatePost.categories = new List<Category>();
-                        }
-                        updatePost.categories.Add(link);
                     }
 
                     foreach (var tag in tags)
                     {
                         var oldLink = updatePost.tags?.FirstOrDefault(x => x.id == tag.id);
-                        if (oldLink != null)
+                        if (oldLink == null)
                         {
-                            updatePost.tags.Remove(oldLink);
+                            var link = _context.Tags.SingleOrDefault(x => x.id == tag.id);
+                            if (updatePost.tags == null)
+                            {
+                                updatePost.tags = new List<Tag>();
+                            }
+                            updatePost.tags.Add(link);
                         }
-                        var link = _context.Tags.SingleOrDefault(x => x.id == tag.id);
-                        if (updatePost.tags == null)
-                        {
-                            updatePost.tags = new List<Tag>();
-                        }
-                        updatePost.tags.Add(link);
                     }
                     await _context.SaveChangesAsync();
                 }

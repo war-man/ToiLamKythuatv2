@@ -1,44 +1,57 @@
-﻿<div class="single">
+﻿@using ToiLamKythuat.ViewModels
+@model DetailHomeView
+<div class="single">
     <div class="container">
-        <h1 style="padding-bottom:10px;">Iran kêu gọi Biden gỡ trừng phạt</h1>
-        <div class="single-grid">
-            <img src="https://i1-vnexpress.vnecdn.net/2021/01/26/BB1cduKq-3940-1611671376.jpg?w=680&h=0&q=100&dpr=1&fit=crop&s=eC1hMDhw72sJMNkuRW851g" alt="" />
-            <p>
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Nullam a efficitur odio, ac maximus lorem. Nullam aliquam fermentum lectus ut sagittis. Sed pulvinar sed ligula gravida condimentum. Proin eleifend vestibulum tortor, ut pellentesque lorem tempor a. Nunc pharetra lacus at laoreet suscipit. Aliquam tempor mattis sagittis. Mauris viverra mi quis risus molestie placerat. Sed accumsan vestibulum fringilla. Etiam dapibus tellus ac eros placerat, at aliquam arcu lobortis. Vestibulum sollicitudin mauris dui, a tempor metus lacinia sed. Nam a auctor purus, nec rutrum ipsum. Maecenas lacus ex, finibus non tempor at, ultrices id sem. Suspendisse et magna et tellus facilisis lacinia at et diam. Fusce finibus ullamcorper ligula non tristique. Nulla facilisi. Donec ultricies nisi vel quam venenatis efficitur. Praesent porta risus arcu, at egestas ante accumsan eu.
-                Phasellus et lacus quis lacus imperdiet fermentum eu a enim. Praesent non lorem rhoncus, cursus leo nec, pellentesque dui..
-            </p>
-        </div>
-        <footer class="entry-footer">
-            <div class="entry-footer-right">
+        <div class="col-md-8 single-main">
+            <div class="single-grid">
+                <img src="@Model.post.coverImage" alt="@Model.post.title" />
+                <h1 style="padding-bottom:10px;">@Model.post.title</h1>
+                <p>@Model.post.summary</p>
+                @Html.Raw(Model.post.detail)
             </div>
-            <div class="cat-links">
-                Được đăng trong: <a style="color:#00aeff" href="https://toihocdesignpattern.com/dich-sach" rel="category tag">Dịch sách</a>, <a style="color:#00aeff" href="https://toihocdesignpattern.com/dich-sach/head-first-design-patterns" rel="category tag">Head First Design Patterns</a>
-            </div>
-            <div class="tags-links">
-                Được sắp xếp bên dưới: <a style="color:#00aeff" href="https://toihocdesignpattern.com/tag/bai-dich-head-first-design-patterns" rel="tag">Bài dịch Head First Design Patterns</a>, <a style="color:#00aeff" href="https://toihocdesignpattern.com/tag/design-pattern" rel="tag">Design Pattern</a>, <a style="color:#00aeff" href="https://toihocdesignpattern.com/tag/dich-sach" rel="tag">Dịch sách</a>, <a style="color: #00aeff" href="https://toihocdesignpattern.com/tag/head-first-design-patterns" rel="tag">Head First Design Patterns</a>, <a style="color: #00aeff" href="https://toihocdesignpattern.com/tag/ket-hop-nhieu-design-pattern" rel="tag">Kết hợp nhiều Design pattern</a>
-            </div>
-        </footer>
-        <ul class="comment-list">
-            <li>
-                <h5 class="post-author_head">Viết bởi <a href="#" title="Posts by admin" rel="author">admin</a></h5>
-            </li>
-            <li>
-                <img src="~/images/avatar.png" class="img-responsive" alt="">
-                <div class="desc">
-                    <p>Xem thêm các bài của: <a href="#" title="Posts by admin" rel="author">admin</a></p>
+            <footer class="entry-footer">
+                <div class="entry-footer-right">
                 </div>
-                <div class="clearfix"></div>
-            </li>
-        </ul>
-        <div class="content-form">
-            <h3>Bình luận</h3>
-            <form>
-                <input type="text" placeholder="Họ và tên" required />
-                <input type="text" placeholder="Email" required />
-                <input type="text" placeholder="Điện thoại" required />
-                <textarea placeholder="Bình luận"></textarea>
-                <input type="submit" value="Gửi bình luận" />
-            </form>
+                <div class="cat-links">
+                    Được đăng trong: <a style="color:#00aeff" href="https://toihocdesignpattern.com/dich-sach" rel="category tag">Dịch sách</a>, <a style="color:#00aeff" href="https://toihocdesignpattern.com/dich-sach/head-first-design-patterns" rel="category tag">Head First Design Patterns</a>
+                </div>
+                <div class="tags-links">
+                    Được sắp xếp bên dưới: <a style="color:#00aeff" href="https://toihocdesignpattern.com/tag/bai-dich-head-first-design-patterns" rel="tag">Bài dịch Head First Design Patterns</a>, <a style="color:#00aeff" href="https://toihocdesignpattern.com/tag/design-pattern" rel="tag">Design Pattern</a>, <a style="color:#00aeff" href="https://toihocdesignpattern.com/tag/dich-sach" rel="tag">Dịch sách</a>, <a style="color: #00aeff" href="https://toihocdesignpattern.com/tag/head-first-design-patterns" rel="tag">Head First Design Patterns</a>, <a style="color: #00aeff" href="https://toihocdesignpattern.com/tag/ket-hop-nhieu-design-pattern" rel="tag">Kết hợp nhiều Design pattern</a>
+                </div>
+            </footer>
+            <ul class="comment-list">
+                <li>
+                    <h5 class="post-author_head">Viết bởi <a href="#" title="Posts by admin" rel="author">admin</a></h5>
+                </li>
+                <li>
+                    <img src="~/images/avatar.png" class="img-responsive" alt="">
+                    <div class="desc">
+                        <p>Xem thêm các bài của: <a href="#" title="Posts by admin" rel="author">admin</a></p>
+                    </div>
+                    <div class="clearfix"></div>
+                </li>
+            </ul>
+            <div class="content-form">
+                <h3>Bình luận</h3>
+                <form>
+                    <input type="text" placeholder="Họ và tên" required />
+                    <input type="text" placeholder="Email" required />
+                    <input type="text" placeholder="Điện thoại" required />
+                    <textarea placeholder="Bình luận"></textarea>
+                    <input type="submit" value="Gửi bình luận" />
+                </form>
+            </div>
+        </div>
+        <div class="col-md-4 side-content">
+            @{
+                var sidebarInfor = new SidebarInfor()
+                {
+                    topPosts = Model.topPosts,
+                    categories = Model.categories,
+                    tags = Model.tags
+                };
+                await Html.RenderPartialAsync("~/Views/Shared/_Sidebar.cshtml", sidebarInfor);
+            }
         </div>
     </div>
 </div>

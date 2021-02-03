@@ -1,0 +1,16 @@
+﻿@model IEnumerable<Post>
+@if (Model != null)
+{
+    foreach (var post in Model)
+    {
+        var postUrl = post.metaTitle + "-" + post.id + ".html";
+        <div class="content-grid-info">
+            <img src="@post.coverImage" alt="@post.title" />
+            <div class="post-info">
+                <h4 style="line-height:1.3em"><a href="@postUrl" style="line-height:1.3em;">@post.title</a>  @post.createDate.ToShortDateString()</h4>
+                <p>@post.summary</p>
+                <a href="@postUrl"><span></span>Đọc tiếp</a>
+            </div>
+        </div>
+    }
+}
