@@ -1,22 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ToiLamKythuat.Context;
 using ToiLamKythuat.Models;
+using ToiLamKythuat.Helpers;
 
 namespace ToiLamKythuat.Controllers
 {
     public class PostsController : Controller
     {
         private readonly BlogContext _context;
+        private readonly IWebHostEnvironment evn;
 
-        public PostsController(BlogContext context)
+        public PostsController(BlogContext context,
+            IWebHostEnvironment evn)
         {
             _context = context;
+            this.evn = evn;
         }
 
         // GET: Posts
@@ -242,6 +248,55 @@ namespace ToiLamKythuat.Controllers
         private bool PostExists(long id)
         {
             return _context.Posts.Any(e => e.id == id);
+        }
+
+        public IActionResult GenSiteMap()
+        {
+            string saveDir = evn.WebRootPath + "\\SiteMap";
+            string savePath = evn.WebRootPath + "\\SiteMap\\Sitemap.xml";
+
+            var posts = _context.Posts.ToList();
+
+            if (!Directory.Exists(saveDir))
+            {
+                Directory.CreateDirectory(saveDir);
+            }
+
+            if (!System.IO.File.Exists(savePath))
+            {
+                using (var filestream = System.IO.File.Create(savePath))
+                {
+                    var generator = new SitemapGenerator(filestream, System.Text.Encoding.UTF8);
+                    generator.WriteStartDocument();
+
+                    foreach(var item in posts)
+                    {
+                        var postUrl = item.metaTitle + "-" + item.id + ".html";
+                        generator.WriteItem(postUrl, DateTime.Now, "1.0");
+                    }
+
+                    generator.WriteEndDocument();
+                }
+            }
+            else
+            {
+                System.IO.File.WriteAllText(savePath,"");
+                using (var filestream = System.IO.File.OpenRead(savePath))
+                {
+                    var generator = new SitemapGenerator(filestream, System.Text.Encoding.UTF8);
+                    generator.WriteStartDocument();
+
+                    foreach (var item in posts)
+                    {
+                        var postUrl = item.metaTitle + "-" + item.id + ".html";
+                        generator.WriteItem(postUrl, DateTime.Now, "1.0");
+                    }
+
+                    generator.WriteEndDocument();
+                }
+            }
+
+            return Redirect(AppGlobal.SiteUrl + savePath);
         }
     }
 }
