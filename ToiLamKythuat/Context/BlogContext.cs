@@ -22,6 +22,7 @@ namespace ToiLamKythuat.Context
         public DbSet<Post> Posts { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<Comment> Comments { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -75,6 +76,12 @@ namespace ToiLamKythuat.Context
             {
                 e.HasKey(x => x.id);
                 e.Property(x => x.tagName).HasMaxLength(1000);
+            });
+
+            builder.Entity<Comment>(e =>
+            {
+                e.HasKey(x => x.id);
+                e.Property(x => x.id).UseIdentityColumn();
             });
         }
     }

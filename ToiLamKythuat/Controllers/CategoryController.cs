@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ToiLamKythuat.Context;
 using ToiLamKythuat.Models;
+using ToiLamKythuat.ViewModels;
 
 namespace ToiLamKythuat.Controllers
 {
@@ -27,6 +28,46 @@ namespace ToiLamKythuat.Controllers
         public async Task<IActionResult> Modal()
         {
             return PartialView(await _context.Categories.ToListAsync());
+        }
+        
+        public IActionResult Post(string categoryCode)
+        {
+            var category = _context.Categories.FirstOrDefault(x => x.code == categoryCode);
+            var model = new HomeView()
+            {
+                categories = _context.Categories.ToList(),
+                tags = _context.Tags.ToList(),
+                topPosts = _context.Posts
+                .Include("tags")
+                .Include("categories")
+                .Select(x => new Post
+                {
+                    id = x.id,
+                    title = x.title,
+                    coverImage = x.coverImage,
+                    summary = x.summary,
+                    createDate = x.createDate,
+                    metaTitle = x.metaTitle,
+                    tags = x.tags,
+                    categories = x.categories
+                }),
+                posts = _context.Posts
+                .Include("tags")
+                .Include("categories")
+                .Where(x => x.categories.Contains(category))
+                .Select(x => new Post
+                {
+                    id = x.id,
+                    title = x.title,
+                    coverImage = x.coverImage,
+                    summary = x.summary,
+                    createDate = x.createDate,
+                    metaTitle = x.metaTitle,
+                    tags = x.tags,
+                    categories = x.categories
+                }),
+            };
+            return View(model);
         }
 
         public async Task<IActionResult> Details(string id)
@@ -53,7 +94,7 @@ namespace ToiLamKythuat.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("code,name")] Category category)
+        public async Task<IActionResult> Create([Bind("code,name,meta")] Category category)
         {
             if (ModelState.IsValid)
             {
@@ -83,7 +124,7 @@ namespace ToiLamKythuat.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("code,name")] Category category)
+        public async Task<IActionResult> Edit(string id, [Bind("code,name,meta")] Category category)
         {
             if (id != category.code)
             {

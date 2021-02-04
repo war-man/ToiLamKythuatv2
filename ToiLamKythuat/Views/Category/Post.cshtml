@@ -13,13 +13,13 @@
         <div class="content-grids">
             <div class="col-md-8 content-main">
                 <div class="content-grid">
-                    @{ 
+                    @{
                         await Html.RenderPartialAsync("~/Views/Posts/List.cshtml", Model.posts);
                     }
                 </div>
             </div>
             <div class="col-md-4 content-right">
-                @{ 
+                @{
                     var sidebarInfor = new SidebarInfor()
                     {
                         topPosts = Model.topPosts,
@@ -33,3 +33,4 @@
         </div>
     </div>
 </div>
+

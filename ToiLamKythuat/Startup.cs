@@ -75,6 +75,16 @@ namespace ToiLamKythuat
                    defaults: new { controller = "Home", action = "Detail" });
 
                 endpoints.MapControllerRoute(
+                   name: "categoryPost",
+                   pattern: "danh-muc/{meta}-{categoryCode}.html",
+                   defaults: new { controller = "Category", action = "Post" });
+
+                endpoints.MapControllerRoute(
+                   name: "tagPost",
+                   pattern: "tag/{meta}-{tagId}.html",
+                   defaults: new { controller = "Tag", action = "Post" });
+
+                endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });

@@ -5,11 +5,35 @@
     {
         var postUrl = post.metaTitle + "-" + post.id + ".html";
         <div class="content-grid-info">
-            <img src="@post.coverImage" alt="@post.title" />
+            <a href="@postUrl" class="w-100">
+                <img src="@(AppGlobal.SiteUrl + post.coverImage)" alt="@post.title" style="width:100%;"/>
+            </a>
             <div class="post-info">
-                <h4 style="line-height:1.3em"><a href="@postUrl" style="line-height:1.3em;">@post.title</a>  @post.createDate.ToShortDateString()</h4>
+                <h4 style="line-height:1.5em"><a href="@(AppGlobal.SiteUrl + postUrl)" style="line-height:1.5em;">@post.title</a>  @post.createDate.ToString("dd-MMM-yyyy")</h4>
                 <p>@post.summary</p>
-                <a href="@postUrl"><span></span>Đọc tiếp</a>
+                <a href="@(AppGlobal.SiteUrl + postUrl)"><span></span>Đọc tiếp</a>
+                <div class="cat-links mt-3">
+                    Được đăng trong:
+                    @if (post.categories != null)
+                    {
+                        foreach (var category in post.categories)
+                        {
+                            var categoryUrl = AppGlobal.SiteUrl + "danh-muc/" + category.meta + "-" + category.code + ".html";
+                            <a style="color:#00aeff" href="@categoryUrl" rel="category tag">@(category.name + ",")</a>
+                        }
+                    }
+                </div>
+                <div class="tags-links">
+                    Được sắp xếp bên dưới:
+                    @if (post?.tags != null)
+                    {
+                        foreach (var tag in post?.tags)
+                        {
+                            var tagUrl = AppGlobal.SiteUrl + "tag/" + tag.meta + "-" + tag.id + ".html";
+                            <a style="color:#00aeff" href="@tagUrl" rel="category tag">@(tag.tagName + ",")</a>
+                        }
+                    }
+                </div>
             </div>
         </div>
     }

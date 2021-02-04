@@ -1,11 +1,23 @@
 ﻿@using ToiLamKythuat.ViewModels
+@using ToiLamKythuat.ViewModelExtensions
 @model DetailHomeView
+@{
+    var headerInfor = new HeaderInfor().GetPostValue(Model.post);
+    var headerHtml = await Html.PartialAsync("~/Views/Header.cshtml", headerInfor);
+}
+@section Header {
+    @headerHtml
+}
 <div class="single">
     <div class="container">
         <div class="col-md-8 single-main">
             <div class="single-grid">
                 <img src="@Model.post.coverImage" alt="@Model.post.title" />
                 <h1 style="padding-bottom:10px;">@Model.post.title</h1>
+                <p class="text-black" 
+                   style="color:black !important; text-align:right; font-family:'Times New Roman', Times, serif; font-size:20px; font-style:italic;">
+                    @Model.post.createDate.ToLongDateString()
+                </p>
                 <p>@Model.post.summary</p>
                 @Html.Raw(Model.post.detail)
             </div>
@@ -13,10 +25,26 @@
                 <div class="entry-footer-right">
                 </div>
                 <div class="cat-links">
-                    Được đăng trong: <a style="color:#00aeff" href="https://toihocdesignpattern.com/dich-sach" rel="category tag">Dịch sách</a>, <a style="color:#00aeff" href="https://toihocdesignpattern.com/dich-sach/head-first-design-patterns" rel="category tag">Head First Design Patterns</a>
+                    Được đăng trong:
+                    @if (Model.post?.categories != null)
+                    {
+                        foreach (var category in Model.post.categories)
+                        {
+                            var categoryUrl = "danh-muc/" + category.meta + "-" + category.code + ".html";
+                            <a style="color:#00aeff" href="@categoryUrl" rel="category tag">@(category.name + ",")</a>
+                        }
+                    }
                 </div>
                 <div class="tags-links">
-                    Được sắp xếp bên dưới: <a style="color:#00aeff" href="https://toihocdesignpattern.com/tag/bai-dich-head-first-design-patterns" rel="tag">Bài dịch Head First Design Patterns</a>, <a style="color:#00aeff" href="https://toihocdesignpattern.com/tag/design-pattern" rel="tag">Design Pattern</a>, <a style="color:#00aeff" href="https://toihocdesignpattern.com/tag/dich-sach" rel="tag">Dịch sách</a>, <a style="color: #00aeff" href="https://toihocdesignpattern.com/tag/head-first-design-patterns" rel="tag">Head First Design Patterns</a>, <a style="color: #00aeff" href="https://toihocdesignpattern.com/tag/ket-hop-nhieu-design-pattern" rel="tag">Kết hợp nhiều Design pattern</a>
+                    Được sắp xếp bên dưới:
+                    @if (Model.post?.tags != null)
+                    {
+                        foreach (var tag in Model.post.tags)
+                        {
+                            var tagUrl = "tag/" + tag.meta + "-" + tag.id + ".html";
+                            <a style="color:#00aeff" href="@tagUrl" rel="category tag">@(tag.tagName + ",")</a>
+                        }
+                    }
                 </div>
             </footer>
             <ul class="comment-list">
@@ -31,7 +59,7 @@
                     <div class="clearfix"></div>
                 </li>
             </ul>
-            <div class="content-form">
+            @*<div class="content-form">
                 <h3>Bình luận</h3>
                 <form>
                     <input type="text" placeholder="Họ và tên" required />
@@ -40,7 +68,7 @@
                     <textarea placeholder="Bình luận"></textarea>
                     <input type="submit" value="Gửi bình luận" />
                 </form>
-            </div>
+            </div>*@
         </div>
         <div class="col-md-4 side-content">
             @{
@@ -51,6 +79,14 @@
                     tags = Model.tags
                 };
                 await Html.RenderPartialAsync("~/Views/Shared/_Sidebar.cshtml", sidebarInfor);
+            }
+        </div>
+    </div>
+    <div class="container pt-2" style="margin-top: 10px;">
+        <h3>Bài viết liên quan</h3>
+        <div class="row">
+            @{
+                await Html.RenderPartialAsync("~/Views/Posts/Related.cshtml", Model.categories);
             }
         </div>
     </div>

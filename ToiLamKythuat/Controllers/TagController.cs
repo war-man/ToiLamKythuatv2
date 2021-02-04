@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ToiLamKythuat.Context;
 using ToiLamKythuat.Models;
+using ToiLamKythuat.ViewModels;
 
 namespace ToiLamKythuat.Controllers
 {
@@ -29,6 +30,46 @@ namespace ToiLamKythuat.Controllers
         public async Task<IActionResult> Modal()
         {
             return PartialView(await _context.Tags.ToListAsync());
+        }
+
+        public IActionResult Post(int tagId)
+        {
+            var tag = _context.Tags.FirstOrDefault(x => x.id == tagId);
+            var model = new HomeView()
+            {
+                categories = _context.Categories.ToList(),
+                tags = _context.Tags.ToList(),
+                topPosts = _context.Posts
+                .Include("tags")
+                .Include("categories")
+                .Select(x => new Post
+                {
+                    id = x.id,
+                    title = x.title,
+                    coverImage = x.coverImage,
+                    summary = x.summary,
+                    createDate = x.createDate,
+                    metaTitle = x.metaTitle,
+                    tags = x.tags,
+                    categories = x.categories
+                }),
+                posts = _context.Posts
+                .Include("tags")
+                .Include("categories")
+                .Where(x => x.tags.Contains(tag))
+                .Select(x => new Post
+                {
+                    id = x.id,
+                    title = x.title,
+                    coverImage = x.coverImage,
+                    summary = x.summary,
+                    createDate = x.createDate,
+                    metaTitle = x.metaTitle,
+                    tags = x.tags,
+                    categories = x.categories
+                }),
+            };
+            return View(model);
         }
 
         // GET: Tag/Details/5
@@ -60,7 +101,7 @@ namespace ToiLamKythuat.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,tagName")] Tag tag)
+        public async Task<IActionResult> Create([Bind("id,meta,tagName")] Tag tag)
         {
             if (ModelState.IsValid)
             {
@@ -92,7 +133,7 @@ namespace ToiLamKythuat.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,tagName")] Tag tag)
+        public async Task<IActionResult> Edit(int id, [Bind("id,meta,tagName")] Tag tag)
         {
             if (id != tag.id)
             {

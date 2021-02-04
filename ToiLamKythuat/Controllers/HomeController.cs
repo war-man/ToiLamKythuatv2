@@ -30,15 +30,34 @@ namespace ToiLamKythuat.Controllers
             {
                 categories = _context.Categories.ToList(),
                 tags = _context.Tags.ToList(),
-                topPosts = _context.Posts.Take(10).Select(x => new Post 
+                topPosts = _context.Posts
+                .Include("tags")
+                .Include("categories")
+                .Take(10).Select(x => new Post 
                 { 
                     id = x.id,
                     title = x.title,
                     coverImage = x.coverImage,
                     summary = x.summary,
                     createDate = x.createDate,
-                    metaTitle = x.metaTitle
-                })
+                    metaTitle = x.metaTitle,
+                    tags = x.tags,
+                    categories = x.categories
+                }),
+                posts = _context.Posts
+                .Include("tags")
+                .Include("categories")
+                .Select(x => new Post
+                {
+                    id = x.id,
+                    title = x.title,
+                    coverImage = x.coverImage,
+                    summary = x.summary,
+                    createDate = x.createDate,
+                    metaTitle = x.metaTitle,
+                    tags = x.tags,
+                    categories = x.categories
+                }),
             };
             return View(model);
         }
@@ -69,6 +88,11 @@ namespace ToiLamKythuat.Controllers
         }
 
         public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        public IActionResult About()
         {
             return View();
         }

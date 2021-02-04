@@ -25,7 +25,7 @@
     <div class="header p-2">
         <div class="container">
             <div class="logo">
-                <a href="index.html"><img src="~/images/logo_157x157.png" title="" /></a>
+                <a asp-action="Index" asp-controller="Home"><img src="~/images/logo_157x157.png" title="" /></a>
             </div>
             <!---start-top-nav---->
             <div class="top-menu">
@@ -38,7 +38,7 @@
                 <span class="menu"> </span>
                 <ul>
                     <li class="active"><a asp-action="Index" asp-controller="Home">TRANG CHỦ</a></li>
-                    <li><a href="about.html">TÁC GIẢ</a></li>
+                    <li><a asp-action="About" asp-controller="Home">TÁC GIẢ</a></li>
                     <li><a asp-action="Index" asp-controller="Contact">LIÊN HỆ</a></li>
                     <li class="clearfix"></li>
                 </ul>
