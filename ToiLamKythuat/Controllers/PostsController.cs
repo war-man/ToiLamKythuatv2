@@ -10,9 +10,12 @@ using Microsoft.EntityFrameworkCore;
 using ToiLamKythuat.Context;
 using ToiLamKythuat.Models;
 using ToiLamKythuat.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace ToiLamKythuat.Controllers
 {
+    [Authorize]
     public class PostsController : Controller
     {
         private readonly BlogContext _context;
@@ -266,37 +269,26 @@ namespace ToiLamKythuat.Controllers
             {
                 using (var filestream = System.IO.File.Create(savePath))
                 {
-                    var generator = new SitemapGenerator(filestream, System.Text.Encoding.UTF8);
-                    generator.WriteStartDocument();
-
-                    foreach(var item in posts)
-                    {
-                        var postUrl = item.metaTitle + "-" + item.id + ".html";
-                        generator.WriteItem(postUrl, DateTime.Now, "1.0");
-                    }
-
-                    generator.WriteEndDocument();
+                    
                 }
             }
-            else
+            var sitemapGeneratetor = new SitemapGenerator();
+
+            // add the home page to the sitemap
+            sitemapGeneratetor.AddUrl(AppGlobal.SiteUrl, modified: DateTime.UtcNow, changeFrequency: ChangeFrequency.Weekly, priority: 1.0);
+
+            // add the blog posts to the sitemap
+            foreach (var post in posts)
             {
-                System.IO.File.WriteAllText(savePath,"");
-                using (var filestream = System.IO.File.OpenRead(savePath))
-                {
-                    var generator = new SitemapGenerator(filestream, System.Text.Encoding.UTF8);
-                    generator.WriteStartDocument();
-
-                    foreach (var item in posts)
-                    {
-                        var postUrl = item.metaTitle + "-" + item.id + ".html";
-                        generator.WriteItem(postUrl, DateTime.Now, "1.0");
-                    }
-
-                    generator.WriteEndDocument();
-                }
+                sitemapGeneratetor.AddUrl(AppGlobal.SiteUrl + post.metaTitle + "-" + post.id + ".html",
+                    modified: post.createDate, changeFrequency: ChangeFrequency.Always, priority: 1);
             }
 
-            return Redirect(AppGlobal.SiteUrl + savePath);
+            string content = sitemapGeneratetor.ToString();
+
+            System.IO.File.WriteAllText(savePath, content);
+
+            return Redirect(AppGlobal.SiteUrl + "SiteMap/SiteMap.xml");
         }
     }
 }

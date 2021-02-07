@@ -4,26 +4,31 @@
     var count = 0;
     foreach (var item in Model)
     {
-        if (count < 4)
+        if (count < 8)
         {
-            var post = item.posts?.FirstOrDefault();
-            if (post != null)
+            if (item.posts != null)
             {
-                count += 1;
-                var postUrl = post.metaTitle + "-" + post.id + ".html";
-                <div class="col-md-3">
-                    <div class="card w-100">
-                        <img class="card-img-top w-100" src="@post.thumnailImage" alt="@post.title" />
-                        <div class="card-body">
-                            <h5 class="card-title" style="padding-top:10px;">
-                                <a href="@postUrl">@post.title</a>
-                            </h5>
-                            <p class="card-text py-3" style="font-weight: 300;padding-top:8px;">
-                                @post.summary
-                            </p>
+                foreach (var post in item.posts)
+                {
+                    if (post != null)
+                    {
+                        count += 1;
+                        var postUrl = post.metaTitle + "-" + post.id + ".html";
+                        <div class="col-md-3">
+                            <div class="card w-100">
+                                <img class="card-img-top w-100" src="@post.thumnailImage" alt="@post.title" style="width:100%" />
+                                <div class="card-body">
+                                    <h5 class="card-title" style="padding-top:10px;">
+                                        <a href="@postUrl">@post.title</a>
+                                    </h5>
+                                    <p class="card-text py-3" style="font-weight: 300;padding-top:8px;">
+                                        @post.summary
+                                    </p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                    }
+                }
             }
         }
         else

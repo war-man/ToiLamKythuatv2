@@ -13,8 +13,19 @@
         <div class="col-md-8 single-main">
             <div class="single-grid">
                 <img src="@Model.post.coverImage" alt="@Model.post.title" />
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        @{ 
+                            var postUrl = Model.post.metaTitle + "-" + Model.post.id + ".html";
+                            var categoryBreadcumbUrl = "danh-muc/" + Model.post.categories.FirstOrDefault()?.meta + "-" + Model.post.categories.FirstOrDefault()?.code + ".html";
+                        }
+                        <li class="breadcrumb-item"><a href="@AppGlobal.SiteUrl">@AppGlobal.SiteName</a></li>
+                        <li class="breadcrumb-item"><a href="@categoryBreadcumbUrl">@Model.post.categories?.FirstOrDefault()?.name</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.post.title</li>
+                    </ol>
+                </nav>
                 <h1 style="padding-bottom:10px;">@Model.post.title</h1>
-                <p class="text-black" 
+                <p class="text-black"
                    style="color:black !important; text-align:right; font-family:'Times New Roman', Times, serif; font-size:20px; font-style:italic;">
                     @Model.post.createDate.ToLongDateString()
                 </p>

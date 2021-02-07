@@ -1,0 +1,20 @@
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://localhost:5001/</loc>
+    <lastmod>2021-02-07T14:40:11.4+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1</priority>
+  </url>
+  <url>
+    <loc>https://localhost:5001/tu-hoc-sap-phan-he-sales-and-distribution-sd-phan-1-gioi-thieu-phan-he-sd-13.html</loc>
+    <lastmod>2021-02-01T22:14:00.0+00:00</lastmod>
+    <changefreq>always</changefreq>
+    <priority>1</priority>
+  </url>
+  <url>
+    <loc>https://localhost:5001/tu-hoc-sap-phan-he-sales-and-distribution-sd-phan-2-to-chuc-danh-nghiep-14.html</loc>
+    <lastmod>2021-02-05T01:46:00.0+00:00</lastmod>
+    <changefreq>always</changefreq>
+    <priority>1</priority>
+  </url>
+</urlset>

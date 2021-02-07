@@ -3,61 +3,84 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace ToiLamKythuat.Helpers
 {
     public class SitemapGenerator
     {
-        XmlTextWriter writer;
+        private readonly XNamespace NS = "http://www.sitemaps.org/schemas/sitemap/0.9";
 
-        public SitemapGenerator(System.IO.Stream stream, System.Text.Encoding encoding)
+        private List<SitemapUrl> _urls;
+
+        public SitemapGenerator()
         {
-            writer = new XmlTextWriter(stream, encoding);
-            writer.Formatting = Formatting.Indented;
+            _urls = new List<SitemapUrl>();
         }
 
-        public SitemapGenerator(System.IO.TextWriter w)
+        public void AddUrl(string url, DateTime? modified = null, ChangeFrequency? changeFrequency = null, double? priority = null)
         {
-            writer = new XmlTextWriter(w);
-            writer.Formatting = Formatting.Indented;
-        }
-        /// <summary>
-        /// Writes the beginning of the SiteMap document
-        /// </summary>
-        public void WriteStartDocument()
-        {
-            writer.WriteStartDocument();
-            writer.WriteStartElement("urlset");
-
-            writer.WriteAttributeString("xmlns", "http://www.google.com/schemas/sitemap/0.84");
+            _urls.Add(new SitemapUrl()
+            {
+                Url = url,
+                Modified = modified,
+                ChangeFrequency = changeFrequency,
+                Priority = priority,
+            });
         }
 
-        /// <summary>
-        /// Writes the end of the SiteMap document
-        /// </summary>
-        public void WriteEndDocument()
+        public override string ToString()
         {
-            writer.WriteEndElement();
-            writer.WriteEndDocument();
+            var sitemap = new XDocument(
+                new XDeclaration("1.0", "utf-8", "yes"),
+                new XElement(NS + "urlset",
+                    from item in _urls
+                    select CreateItemElement(item)
+                    ));
+
+            return sitemap.ToString();
         }
 
-        /// <summary>
-        /// Closes this stream and the underlying stream
-        /// </summary>
-        public void Close()
+        private XElement CreateItemElement(SitemapUrl url)
         {
-            writer.Flush();
-            writer.Close();
-        }
+            XElement itemElement = new XElement(NS + "url", new XElement(NS + "loc", url.Url.ToLower()));
 
-        public void WriteItem(string link, DateTime publishedDate, string priority)
-        {
-            writer.WriteStartElement("url");
-            writer.WriteElementString("loc", link);
-            writer.WriteElementString("lastmod", publishedDate.ToString("yyyy-MM-dd"));
-            writer.WriteElementString("changefreq", "always");
-            writer.WriteElementString("priority", priority);
-            writer.WriteEndElement();
+            if (url.Modified.HasValue)
+            {
+                itemElement.Add(new XElement(NS + "lastmod", url.Modified.Value.ToString("yyyy-MM-ddTHH:mm:ss.f") + "+00:00"));
+            }
+
+            if (url.ChangeFrequency.HasValue)
+            {
+                itemElement.Add(new XElement(NS + "changefreq", url.ChangeFrequency.Value.ToString().ToLower()));
+            }
+
+            if (url.Priority.HasValue)
+            {
+                itemElement.Add(new XElement(NS + "priority", url.Priority.Value.ToString("N0")));
+            }
+
+            return itemElement;
         }
+        
+    }
+
+    public enum ChangeFrequency
+    {
+        Always,
+        Hourly,
+        Daily,
+        Weekly,
+        Monthly,
+        Yearly,
+        Never
+    }
+
+    public class SitemapUrl
+    {
+        public string Url { get; set; }
+        public DateTime? Modified { get; set; }
+        public ChangeFrequency? ChangeFrequency { get; set; }
+        public double? Priority { get; set; }
     }
 }

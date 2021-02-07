@@ -46,7 +46,7 @@ namespace ToiLamKythuat.Controllers
                 }),
                 posts = _context.Posts
                 .Include("tags")
-                .Include("categories")
+                .Include(x => x.categories).ThenInclude(x => x.posts)
                 .Select(x => new Post
                 {
                     id = x.id,
@@ -65,7 +65,7 @@ namespace ToiLamKythuat.Controllers
         public IActionResult Detail(int PostId)
         {
             var post = _context.Posts
-                        .Include("categories")
+                        .Include(x => x.categories).ThenInclude(x => x.posts)
                         .Include("tags")
                         .FirstOrDefault(x => x.id == PostId);
 

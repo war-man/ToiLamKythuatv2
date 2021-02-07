@@ -1,32 +1,38 @@
-﻿<div class="about-content">
+﻿@using ToiLamKythuat.ViewModels
+@using ToiLamKythuat.ViewModelExtensions
+@{
+    var headerInfor = new HeaderInfor().GetDefaultValue();
+    var headerHtml = await Html.PartialAsync("~/Views/Header.cshtml", headerInfor);
+}
+@model HomeView
+@section Header {
+    @headerHtml
+}
+<div class="about-content">
     <div class="container">
         <h2>Giới thiệu bản thân và trang Blog</h2>
         <div class="about-section">
             <div class="about-grid">
                 <h3>Câu chuyện về tôi?</h3>
                 <p>
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                    It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including
-                    versions of Lorem Ipsum.
+                    Chào độc giả, bao gồm những người bạn, những người mình quen biết hoặc chưa từng quen biết.
+                    Trước tiên, cho mình gởi lời cảm ơn chân thành nhất đến tất cả những độc giả ghé thăm “ngôi nhà” tinh thần này của mình.
                 </p>
                 <p>
-                    It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages
-                    and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+                    Như tựa đề của blog, “tôi làm kỹ thuật” đây là hành trình học hỏi và tích lũy kinh nghiệm của mình trong công việc, học tập và trong cuộc sống.
+                    Như bạn biết đó kiến thức, triết lý là hai thứ vô cùng quan trọng trong hành trang trên đường phát triển bản thân. Nên với việc duy trì và ngày càng cải thiện hình ảnh lẫn chất lượng blog, mình hi vọng sẽ ngày càng hoàn thiện hơn bản thân mình.
                 </p>
             </div>
             <div class="about-grid2">
                 <h3>Những mục tiêu hướng đến?</h3>
                 <p>
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                    It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including
-                    versions of Lorem Ipsum.
+                    Như đã đề cập ở trên blog "Tôi làm kỹ thuật" là nơi mình chia sẽ những kiến thức, chém gió và bàn luận về các trải nghiệm của mình trong cuộc sống, tuy là nói vậy thôi nhưng nó cũng cần có những mục tiêu cụ thể
                 </p>
                 <ul>
-                    <li><a href="#">Always free from repetition</a></li>
-                    <li><a href="#">Vestibulum rhoncus nibh quis dui fermentum iaculis.</a></li>
-                    <li><a href="#">The standard chunk of Lorem Ipsum</a></li>
-                    <li><a href="#">In consequat dolor in lorem egestas ultrices.</a></li>
-                    <li><a href="#">Ultrices rhoncus nibh quis dui.</a></li>
+                    <li><a href="#">Đọc và dịch sách để không phải là "loser"</a></li>
+                    <li><a href="#">Phát triển blog để phát triển bản thân</a></li>
+                    <li><a href="#">Trao đi "yêu thương" để nhận lại "yêu thương" để rồi lan tỏa yêu thương đến mọi người (chia sẻ và học hỏi)</a></li>
+                    <li><a href="#">Kiếm chút cơm "xiền" đi cà phê</a></li>
                 </ul>
             </div>
             <div class="who-iam">
@@ -39,14 +45,15 @@
                     <div class="col-md-8 col-sm-12">
                         <h3>Tôi là ai?</h3>
                         <div class="man-info">
-                            <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. </p>
+                            <p>Vào đề nãy giờ đã khá lâu, bây giờ mình vô phần chính nhé, đó là vài câu giới thiệu bản thân</p>
                             <h4>Những sự thật về tôi.</h4>
                             <ul>
-                                <li>Nullam at turpis a orci pretium pharetra.</li>
-                                <li>Curabitur tincidunt purus mollis facilisis placerat.</li>
-                                <li>Mauris a nulla ac est tincidunt interdum.</li>
-                                <li>Pellentesque vel enim nec urna imperdiet mollis.</li>
-                                <li>Integer interdum risus et scelerisque volutpat.</li>
+                                <li>Họ và tên: Dương Nguyễn Tấn Hòa.</li>
+                                <li>Ngày sinh: 30/11/1997.</li>
+                                <li>Tốt nghiệp Đại học Bách Khoa Thành Phố Hồ Minh năm 2019 chuyên ngành Điện tử - Viễn thông</li>
+                                <li>Quên quán: huyện Bến Lức, tỉnh Long An. Thường trú: TP.Hồ Chí Minh</li>
+                                <li>Tính cách: hướng nội, trầm lắng</li>
+                                <li>Sở thích: Nghe nhạc, đọc sách và "nghiện" cà phê</li>
                             </ul>
                         </div>
                     </div>

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +13,7 @@ using ToiLamKythuat.ViewModels;
 
 namespace ToiLamKythuat.Controllers
 {
+    [Authorize]
     public class CategoryController : Controller
     {
         private readonly BlogContext _context;
@@ -30,6 +33,7 @@ namespace ToiLamKythuat.Controllers
             return PartialView(await _context.Categories.ToListAsync());
         }
         
+        [AllowAnonymous]
         public IActionResult Post(string categoryCode)
         {
             var category = _context.Categories.FirstOrDefault(x => x.code == categoryCode);
@@ -54,6 +58,7 @@ namespace ToiLamKythuat.Controllers
                 posts = _context.Posts
                 .Include("tags")
                 .Include("categories")
+                .Include(x => x.categories).ThenInclude(x => x.posts)
                 .Where(x => x.categories.Contains(category))
                 .Select(x => new Post
                 {

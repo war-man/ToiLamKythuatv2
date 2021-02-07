@@ -1,16 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ToiLamKythuat.Context;
+using ToiLamKythuat.Helpers;
 using ToiLamKythuat.ModelExtensions;
 using ToiLamKythuat.Models;
 
 namespace ToiLamKythuat.Controllers
 {
+    [Authorize]
     public class UserController : Controller
     {
         private readonly BlogContext _context;
@@ -45,6 +51,7 @@ namespace ToiLamKythuat.Controllers
         }
 
         // GET: User/Create
+        [AllowAnonymous]
         public IActionResult Create()
         {
             return View();
@@ -55,6 +62,7 @@ namespace ToiLamKythuat.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AllowAnonymous]
         public async Task<IActionResult> Create([Bind("username,password,hashKey,isActive")] User user)
         {
             if (ModelState.IsValid)
@@ -99,12 +107,20 @@ namespace ToiLamKythuat.Controllers
             {
                 try
                 {
-                    //string oldPassword = _context.Entry(user).Property(x => x.password).OriginalValue;
-                    //if (oldPassword != user.password)
-                    //{
-                    //    user.HashPassword();
-                    //}
-                    _context.Update(user);
+                    var existUser = _context.Users.FirstOrDefault(x => x.username == user.username);
+
+                    if(existUser != null)
+                    {
+                        existUser.username = user.username;
+                        existUser.hashKey = Guid.NewGuid().ToString();
+                        existUser.password = user.password;
+                        existUser.HashPassword();
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Tài khoản không tồn tại");
+                        return View();
+                    }
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -155,6 +171,56 @@ namespace ToiLamKythuat.Controllers
         private bool UserExists(string id)
         {
             return _context.Users.Any(e => e.username == id);
+        }
+
+        [AllowAnonymous]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login([Bind("username,password")] User user)
+        {
+            var existUser = await _context.Users
+                .FirstOrDefaultAsync(x => x.username == user.username);
+
+            if(existUser != null)
+            {
+                if(SecurityHelper.Encrypt(existUser.hashKey, user.password) != existUser.password)
+                {
+                    ModelState.AddModelError("Message", "Mật khẩu không hợp lệ");
+                    return View();
+                }
+                else
+                {
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, user.username),
+                    };
+
+                    var claimsIdentity = new ClaimsIdentity(
+                        claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    var authProperties = new AuthenticationProperties
+                    {
+                    };
+
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(claimsIdentity),
+                        authProperties);
+
+                    return RedirectToAction("Index","Posts");
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("Message", "Tài khoản không tồn tại trong hệ thống");
+                return View();
+            }
         }
     }
 }

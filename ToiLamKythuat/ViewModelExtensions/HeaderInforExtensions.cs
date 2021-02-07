@@ -23,7 +23,7 @@ namespace ToiLamKythuat.ViewModelExtensions
         public static HeaderInfor GetPostValue(this HeaderInfor infor, Post post)
         {
             infor.SiteName = AppGlobal.SiteName;
-            infor.Icon = post?.thumnailImage;
+            infor.Icon = AppGlobal.SiteImage;
             infor.Keywords = post?.keywords.Split(",").ToList();
             infor.Description = post?.description;
             infor.Title = post?.title;

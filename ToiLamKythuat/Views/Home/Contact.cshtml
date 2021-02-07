@@ -1,6 +1,16 @@
-﻿@{
+﻿@using ToiLamKythuat.ViewModels
+@using ToiLamKythuat.ViewModelExtensions
+@{
     ViewData["Title"] = "Contact";
     Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var headerInfor = new HeaderInfor().GetDefaultValue();
+    var headerHtml = await Html.PartialAsync("~/Views/Header.cshtml", headerInfor);
+}
+@model HomeView
+@section Header {
+    @headerHtml
 }
 <div class="contact-content">
     <div class="container">
@@ -9,7 +19,7 @@
             <p>Mọi đóng góp của bạn là thành công của tôi, xin chân thành cảm đã quan tâm đến chúng tôi. Vui lòng điền thông tin bên dưới</p>
         </div>
         <div class="contact-details">
-            <form>
+            <form asp-action="SendMail">
                 <input type="text" placeholder="Họ và tên" required />
                 <input type="text" placeholder="Email" required />
                 <input type="text" placeholder="Điện thoại" required />
