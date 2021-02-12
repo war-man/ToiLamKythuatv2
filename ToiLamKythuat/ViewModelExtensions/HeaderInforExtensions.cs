@@ -12,7 +12,7 @@ namespace ToiLamKythuat.ViewModelExtensions
         public static HeaderInfor GetDefaultValue(this HeaderInfor infor)
         {
             infor.SiteName = AppGlobal.SiteName;
-            infor.Icon = AppGlobal.SiteImage;
+            infor.Icon = AppGlobal.SiteUrl + AppGlobal.SiteImage;
             infor.Keywords = AppGlobal.SiteKeywords;
             infor.FacebookTags = AppGlobal.SiteKeywords;
             infor.Description = AppGlobal.SiteDescription;

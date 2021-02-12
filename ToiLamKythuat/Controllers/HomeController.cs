@@ -32,9 +32,10 @@ namespace ToiLamKythuat.Controllers
                 tags = _context.Tags.ToList(),
                 topPosts = _context.Posts
                 .Include("tags")
+                .OrderByDescending(x => x.createDate)
                 .Include("categories")
-                .Take(10).Select(x => new Post 
-                { 
+                .Take(10).Select(x => new Post
+                {
                     id = x.id,
                     title = x.title,
                     coverImage = x.coverImage,
@@ -47,6 +48,7 @@ namespace ToiLamKythuat.Controllers
                 posts = _context.Posts
                 .Include("tags")
                 .Include(x => x.categories).ThenInclude(x => x.posts)
+                .OrderByDescending(x => x.createDate)
                 .Select(x => new Post
                 {
                     id = x.id,

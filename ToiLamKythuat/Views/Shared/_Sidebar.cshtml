@@ -23,7 +23,7 @@
     <ul>
         @foreach (var category in Model.categories)
         {
-            var categoryUrl = "danh-muc/" + category.meta + "-" + category.code + ".html";
+            var categoryUrl = AppGlobal.SiteUrl + "danh-muc/" + category.meta + "-" + category.code + ".html";
             <li><a href="@categoryUrl">@category.name</a></li>
         }
     </ul>
@@ -37,7 +37,7 @@
     <ul>
         @foreach (var tag in Model.tags)
         {
-            var tagUrl = "tag/" + tag.meta + "-" + tag.id + ".html";
+            var tagUrl = AppGlobal.SiteUrl + "tag/" + tag.meta + "-" + tag.id + ".html";
             <li><a href="@tagUrl">@tag.tagName</a></li>
         }
     </ul>

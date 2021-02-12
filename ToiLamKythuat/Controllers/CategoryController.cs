@@ -44,6 +44,7 @@ namespace ToiLamKythuat.Controllers
                 topPosts = _context.Posts
                 .Include("tags")
                 .Include("categories")
+                .OrderByDescending(x => x.createDate)
                 .Select(x => new Post
                 {
                     id = x.id,
@@ -58,6 +59,7 @@ namespace ToiLamKythuat.Controllers
                 posts = _context.Posts
                 .Include("tags")
                 .Include("categories")
+                .OrderByDescending(x => x.createDate)
                 .Include(x => x.categories).ThenInclude(x => x.posts)
                 .Where(x => x.categories.Contains(category))
                 .Select(x => new Post
