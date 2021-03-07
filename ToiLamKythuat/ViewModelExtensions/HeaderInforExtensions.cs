@@ -17,6 +17,7 @@ namespace ToiLamKythuat.ViewModelExtensions
             infor.FacebookTags = AppGlobal.SiteKeywords;
             infor.Description = AppGlobal.SiteDescription;
             infor.Url = AppGlobal.SiteUrl;
+            infor.Title = AppGlobal.SiteTitle;
             return infor;
         }
 

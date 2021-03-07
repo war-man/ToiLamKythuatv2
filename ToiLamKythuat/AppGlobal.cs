@@ -90,5 +90,29 @@ namespace ToiLamKythuat
                     .GetSection("SiteKeywords").Get<List<string>>();
             }
         }
+
+        public static string SiteTitle
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder()
+                .SetBasePath(System.IO.Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("GlobalConfig")
+                    .GetSection("SiteTitle").Value;
+            }
+        }
+
+        public static string SecretKey
+        {
+            get
+            {
+                var builder = new ConfigurationBuilder()
+                .SetBasePath(System.IO.Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                return builder.Build().GetSection("GlobalConfig")
+                    .GetSection("SecretKey").Value;
+            }
+        }
     }
 }
